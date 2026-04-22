@@ -1,4 +1,4 @@
-const Issue = require("../models/Issue");
+const Issue = require("../models/issue");
 
 exports.createIssue = async (req, res) => {
   try {
