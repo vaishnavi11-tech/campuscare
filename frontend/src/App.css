@@ -1,0 +1,77 @@
+/* 🌍 DASHBOARD BACKGROUND */
+body {
+  background-color: #9B0F06; /* 🔴 main */
+  color: #EED9B9;
+}
+
+/* 📦 CONTAINER */
+.container {
+  padding: 20px;
+}
+
+/* 🔝 NAVBAR */
+.navbar {
+  background-color: #5E0006;
+  color: #EED9B9;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+/* 🧾 CARDS */
+.card {
+  background-color: #EED9B9;
+  color: #5E0006;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #5E0006;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* ✏️ INPUTS */
+.input, .select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 6px;
+  border: 1px solid #9B0F06;
+  background: #fff3e0;
+  color: #333;
+}
+
+/* 🔘 BUTTON BASE */
+button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+/* 🎯 BUTTONS */
+.btn-blue {
+  background: #D53E0F; /* 🟠 */
+  color: white;
+}
+
+.btn-green {
+  background: #5E0006; /* ❤️ */
+  color: white;
+}
+
+.btn-yellow {
+  background: #9B0F06; /* 🔴 */
+  color: white;
+}
+
+/* 🔴 LOGOUT */
+.logout-btn {
+  background: #D53E0F;
+  color: white;
+}
+
+/* 🎯 HEADINGS */
+h1, h2 {
+  color: #EED9B9;
+}
