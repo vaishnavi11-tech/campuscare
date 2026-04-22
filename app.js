@@ -13,7 +13,7 @@ const jwt = require("jsonwebtoken");
 
 const connectDB = require("./config/db");
 const User = require("./models/User");
-const Issue = require("./models/Issue");
+const Issue = require("./models/issue");
 
 const app = express();
 
