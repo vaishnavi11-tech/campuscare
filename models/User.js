@@ -23,12 +23,11 @@ const userSchema = new mongoose.Schema({
     default: "student"
   },
 
-  // ✅ ADDED
   category: {
-  type: String,
-  enum: ["Hostel", "Mess", "Academics", "Other"],
-  default: null
-},
+    type: String,
+    enum: ["Hostel", "Mess", "Academics", "Other"],
+    default: null
+  },
 
   createdAt: {
     type: Date,
@@ -36,18 +35,4 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-const User = require("../models/User");
-
-// ✅ Get all staff users
-const getStaffUsers = async (req, res) => {
-  try {
-    const staff = await User.find({ role: "staff" }).select("-password");
-    res.json(staff);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-module.exports = { getStaffUsers };
-
-module.exports = mongoose.model("User", userSchema); 
+module.exports = mongoose.model("User", userSchema);
