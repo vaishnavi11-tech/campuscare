@@ -3,8 +3,6 @@ console.log("APP FILE LOADED");
 require("dotenv").config();
 const issueRoutes = require("./routes/issueRoutes");
 
-
-
 const express = require("express");
 const roleCheck = require("./middleware/role");
 const auth = require("./middleware/auth");
@@ -19,10 +17,8 @@ const Issue = require("./models/Issue");
 
 const app = express();
 
-
 // connect DB
 connectDB();
-
 
 /* ================= FINAL CORS FIX ================= */
 
@@ -31,7 +27,6 @@ app.use(cors({
   credentials: true
 }));
 
-// ✅ force allow everything (fix preflight)
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "*");
@@ -42,14 +37,14 @@ app.use((req, res, next) => {
 /* ================================================= */
 
 app.use(express.json());
-console.log("TEST ROUTE ADDED");
+
 app.get("/api/test", auth, (req, res) => {
   res.json({
     message: "Protected route working",
     user: req.user
   });
 });
-/* ---------- TEST ROUTE ---------- */
+
 app.get("/", (req, res) => {
   res.send("API WORKING");
 });
@@ -61,7 +56,8 @@ app.get("/", (req, res) => {
 // REGISTER
 app.post("/api/users/register", async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    // ✅ CHANGE 1: added department
+    const { name, email, password, role, department } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ error: "All fields required" });
@@ -78,7 +74,10 @@ app.post("/api/users/register", async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: role || "student"
+      role: role || "student",
+
+      // ✅ CHANGE 2: save department only for staff
+      department: role === "staff" ? department : null
     });
 
     const savedUser = await user.save();
@@ -112,23 +111,25 @@ app.post("/api/users/login", async (req, res) => {
 
     const token = jwt.sign(
       { id: user._id, role: user.role },
-        process.env.JWT_SECRET,
+      process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
     res.json({
       message: "Login successful",
       token,
-       user: {
-    id: user._id,
-    email: user.email,
-    role: user.role   // ✅ MUST BE HERE
-  }
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role
+      }
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
+// GET ALL USERS
 app.get("/api/users", async (req, res) => {
   try {
     const users = await User.find().select("-password");
@@ -138,16 +139,15 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
-
 /* =======================================================
    ISSUE ROUTES
 ======================================================= */
 
 // CREATE ISSUE
-
-  app.post("/api/issues", auth, roleCheck("student"), async (req, res) => {
+app.post("/api/issues", auth, roleCheck("student"), async (req, res) => {
   try {
-const { title, description, category, priority } = req.body;
+    const { title, description, category, priority } = req.body;
+
     const issue = new Issue({
       title,
       description,
@@ -177,7 +177,6 @@ app.get("/api/issues", auth, async (req, res) => {
 
     let filter = {};
 
-    // ✅ ROLE BASED FILTER
     if (req.user.role === "student") {
       filter.createdBy = req.user.id;
     }
@@ -197,29 +196,10 @@ app.get("/api/issues", auth, async (req, res) => {
   }
 });
 
-// GET SINGLE ISSUE
-app.get("/api/issues/:id", async (req, res) => {
-  try {
-    const issue = await Issue.findById(req.params.id)
-      .populate("createdBy", "name email")
-      .populate("assignedTo", "name email")
-      .populate("comments.user", "name");
-
-    if (!issue) {
-      return res.status(404).json({ error: "Issue not found" });
-    }
-
-    res.json(issue);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // ASSIGN ISSUE
-
-  app.put("/api/issues/:id/assign", auth, roleCheck("admin"), async (req, res) => {
+app.put("/api/issues/:id/assign", auth, roleCheck("admin"), async (req, res) => {
   try {
-    const { staffId, adminId } = req.body;
+    const { staffId } = req.body;
 
     const issue = await Issue.findById(req.params.id);
 
@@ -228,7 +208,6 @@ app.get("/api/issues/:id", async (req, res) => {
 
     issue.history.push({
       action: "Assigned to Staff",
-      
       performedBy: req.user.id
     });
 
@@ -241,8 +220,7 @@ app.get("/api/issues/:id", async (req, res) => {
 });
 
 // UPDATE STATUS
-
-  app.put("/api/issues/:id/status", auth, roleCheck("staff"), async (req, res) => {
+app.put("/api/issues/:id/status", auth, roleCheck("staff"), async (req, res) => {
   try {
     const { status, userId } = req.body;
 
@@ -263,31 +241,6 @@ app.get("/api/issues/:id", async (req, res) => {
   }
 });
 
-// ADD COMMENT
-app.post("/api/issues/:id/comment", async (req, res) => {
-  try {
-    const { text, userId } = req.body;
-
-    const issue = await Issue.findById(req.params.id);
-
-    issue.comments.push({
-      text,
-      user: userId
-    });
-
-    issue.history.push({
-      action: "Comment added",
-      performedBy: userId
-    });
-
-    await issue.save();
-
-    res.json(issue);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // DELETE ISSUE
 app.delete("/api/issues/:id", async (req, res) => {
   try {
@@ -297,9 +250,24 @@ app.delete("/api/issues/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 app.use("/api/issues", issueRoutes);
 app.use("/api/users", userRoutes);
 
+app.get("/api/users/staff", async (req, res) => {
+  try {
+    const { department } = req.query;
+
+    const staff = await User.find({
+      role: "staff",
+      department: department
+    }).select("-password");
+
+    res.json(staff);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 /* ---------- SERVER ---------- */
 app.listen(5000, () => {
   console.log("Server running on port 5000");

@@ -23,11 +23,18 @@ const userSchema = new mongoose.Schema({
     default: "student"
   },
 
+  // ✅ ADDED
+  department: {
+    type: String,
+    default: null
+  },
+
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
+
 const User = require("../models/User");
 
 // ✅ Get all staff users
@@ -42,4 +49,4 @@ const getStaffUsers = async (req, res) => {
 
 module.exports = { getStaffUsers };
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema); 
