@@ -4,7 +4,7 @@ const router = express.Router();
 const {
   createIssue,
   getIssues,
-} = require("../controllers/Issue");  // ✅ NEW NAMEcd
+} = require("../controllers/issue");  // ✅ NEW NAMEcd
 const authMiddleware = require("../middleware/auth");
 
 // ✅ ROUTES

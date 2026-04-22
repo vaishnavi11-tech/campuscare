@@ -54,10 +54,12 @@ app.get("/", (req, res) => {
 ======================================================= */
 
 // REGISTER
-app.post("/api/users/register", async (req, res) => {
+
+    
+
+   app.post("/api/users/register", async (req, res) => {
   try {
-    // ✅ CHANGE 1: added department
-    const { name, email, password, role, department } = req.body;
+    const { name, email, password, role, category } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ error: "All fields required" });
@@ -76,8 +78,8 @@ app.post("/api/users/register", async (req, res) => {
       password: hashedPassword,
       role: role || "student",
 
-      // ✅ CHANGE 2: save department only for staff
-      department: role === "staff" ? department : null
+      // ✅ THIS IS THE FIX
+      category: role === "staff" ? category : null
     });
 
     const savedUser = await user.save();
@@ -163,7 +165,7 @@ app.post("/api/issues", auth, roleCheck("student"), async (req, res) => {
     });
 
     const savedIssue = await issue.save();
-
+console.log("Saved issue:", savedIssue);
     res.status(201).json(savedIssue);
   } catch (error) {
     res.status(400).json({ error: error.message });

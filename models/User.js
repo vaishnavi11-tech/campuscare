@@ -24,10 +24,11 @@ const userSchema = new mongoose.Schema({
   },
 
   // ✅ ADDED
-  department: {
-    type: String,
-    default: null
-  },
+  category: {
+  type: String,
+  enum: ["Hostel", "Mess", "Academics", "Other"],
+  default: null
+},
 
   createdAt: {
     type: Date,
