@@ -6,7 +6,6 @@ const issueRoutes = require("./routes/issueRoutes");
 const express = require("express");
 const roleCheck = require("./middleware/role");
 const auth = require("./middleware/auth");
-const cors = require("cors");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
