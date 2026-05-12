@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import API from "../services/api"; // ✅ changed
+import API from "../services/api";
 import Navbar from "../components/Navbar";
 import "../App.css";
 
@@ -7,11 +7,27 @@ const AdminDashboard = () => {
   const [issues, setIssues] = useState([]);
   const [staffList, setStaffList] = useState([]);
 
+  // ✅ Statistics
+  const totalIssues = issues.length;
+
+  const pendingIssues = issues.filter(
+    (issue) => issue.status === "Pending"
+  ).length;
+
+  const resolvedIssues = issues.filter(
+    (issue) => issue.status === "Resolved"
+  ).length;
+
+  const assignedIssues = issues.filter(
+    (issue) => issue.status === "Assigned"
+  ).length;
+
+  // ✅ Fetch Issues
   const fetchIssues = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await API.get("/api/issues", { // ✅ changed
+      const res = await API.get("/api/issues", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -23,11 +39,12 @@ const AdminDashboard = () => {
     }
   };
 
+  // ✅ Fetch Staff
   const fetchStaff = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await API.get("/api/users/staff", { // ✅ changed
+      const res = await API.get("/api/users/staff", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -44,33 +61,14 @@ const AdminDashboard = () => {
     fetchStaff();
   }, []);
 
-  const updateStatus = async (id, status) => {
-    try {
-      const token = localStorage.getItem("token");
-
-      await API.put( // ✅ changed
-        `/api/issues/${id}/status`,
-        { status },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      fetchIssues();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
+  // ✅ Assign Issue
   const assignIssue = async (issueId, staffId) => {
     if (!staffId) return;
 
     try {
       const token = localStorage.getItem("token");
 
-      await API.put( // ✅ changed
+      await API.put(
         `/api/issues/${issueId}/assign`,
         { staffId },
         {
@@ -93,37 +91,126 @@ const AdminDashboard = () => {
       <div className="container">
         <h1>Admin Dashboard</h1>
 
+        {/* ✅ Statistics Cards */}
+        <div
+          style={{
+            display: "flex",
+            gap: "15px",
+            flexWrap: "wrap",
+            marginBottom: "25px",
+          }}
+        >
+          <div className="card">
+            <h3>Total Issues</h3>
+            <p>{totalIssues}</p>
+          </div>
+
+          <div className="card">
+            <h3>Pending</h3>
+            <p>{pendingIssues}</p>
+          </div>
+
+          <div className="card">
+            <h3>Resolved</h3>
+            <p>{resolvedIssues}</p>
+          </div>
+
+          <div className="card">
+            <h3>Assigned</h3>
+            <p>{assignedIssues}</p>
+          </div>
+        </div>
+
+        {/* ✅ Issue List */}
         {issues.length === 0 ? (
-          <p>No issues found</p>
+          <div className="card">
+            <h3>No Issues Found</h3>
+            <p>All reported issues will appear here.</p>
+          </div>
         ) : (
           issues.map((issue) => (
             <div className="card" key={issue._id}>
               <h3>{issue.title}</h3>
+
               <p>{issue.description}</p>
 
-              <p><strong>Status:</strong> {issue.status}</p>
-              <p><strong>Priority:</strong> {issue.priority}</p>
-              <p><strong>Category:</strong> {issue.category}</p>
+              {/* ✅ Status */}
+              <p>
+                <strong>Status:</strong>{" "}
+                <span
+                  style={{
+                    color:
+                      issue.status === "Resolved"
+                        ? "green"
+                        : issue.status === "Pending"
+                        ? "orange"
+                        : "#007bff",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {issue.status}
+                </span>
+              </p>
 
-              <select onChange={(e) => assignIssue(issue._id, e.target.value)}>
-                <option>Select Staff</option>
+              {/* ✅ Priority */}
+              <p>
+                <strong>Priority:</strong>{" "}
+                <span
+                  style={{
+                    color:
+                      issue.priority === "High"
+                        ? "red"
+                        : issue.priority === "Medium"
+                        ? "orange"
+                        : "green",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {issue.priority}
+                </span>
+              </p>
 
-                {staffList.map((staff) => (
-                  <option key={staff._id} value={staff._id}>
-                    {staff.name} ({staff.category})
-                  </option>
-                ))}
+              {/* ✅ Category */}
+              <p>
+                <strong>Category:</strong> {issue.category}
+              </p>
+
+              {/* ✅ Created Date */}
+              <p>
+                <strong>Created:</strong>{" "}
+                {new Date(issue.createdAt).toLocaleDateString()}
+              </p>
+
+              {/* ✅ Staff Assignment */}
+              <select
+                onChange={(e) =>
+                  assignIssue(issue._id, e.target.value)
+                }
+              >
+                <option value="">Select Staff</option>
+
+                {staffList
+                  .filter(
+                    (staff) =>
+                      staff.category === issue.category
+                  )
+                  .map((staff) => (
+                    <option
+                      key={staff._id}
+                      value={staff._id}
+                    >
+                      {staff.name} ({staff.category})
+                    </option>
+                  ))}
               </select>
 
-              <br /><br />
-
-              <button onClick={() => updateStatus(issue._id, "In Progress")}>
-                In Progress
-              </button>
-
-              <button onClick={() => updateStatus(issue._id, "Resolved")}>
-                Resolve
-              </button>
+              {/* ✅ Assigned Staff */}
+              <p style={{ marginTop: "10px" }}>
+                <strong>Assigned To:</strong>{" "}
+                {issue.assignedTo
+                  ? issue.assignedTo.name
+                  : "Not Assigned"}
+              </p>
             </div>
           ))
         )}

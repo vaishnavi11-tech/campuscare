@@ -33,13 +33,15 @@ const Login = () => {
 
       const role = data.user.role;
 
+      alert("Login successful");
+
       if (role === "student") navigate("/student");
       else if (role === "admin") navigate("/admin");
       else if (role === "staff") navigate("/staff");
 
     } catch (error) {
       console.error(error);
-      alert("Login failed. Check credentials.");
+      alert("Login failed");
     } finally {
       setLoading(false);
     }
@@ -48,10 +50,20 @@ const Login = () => {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <h2 style={styles.title}>Welcome Back</h2>
+
+        {/* ✅ Clickable Logo */}
+        <h1
+          style={styles.logo}
+          onClick={() => navigate("/")}
+        >
+          CampusCare
+        </h1>
+
+        <h3 style={styles.title}>Welcome Back</h3>
 
         <form onSubmit={handleLogin} style={styles.form}>
-          
+
+          {/* ✅ Email */}
           <div style={styles.inputGroup}>
             <input
               type="email"
@@ -60,9 +72,13 @@ const Login = () => {
               onChange={(e) => setEmail(e.target.value)}
               style={styles.input}
             />
-            <label style={styles.label}>Email</label>
+
+            <label style={styles.label}>
+              Email
+            </label>
           </div>
 
+          {/* ✅ Password */}
           <div style={styles.inputGroup}>
             <input
               type={showPassword ? "text" : "password"}
@@ -71,22 +87,36 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               style={styles.input}
             />
-            <label style={styles.label}>Password</label>
+
+            <label style={styles.label}>
+              Password
+            </label>
 
             <span
               style={styles.toggle}
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() =>
+                setShowPassword(!showPassword)
+              }
             >
               {showPassword ? "Hide" : "Show"}
             </span>
           </div>
 
-          <button style={styles.button} type="submit" disabled={loading}>
+          {/* ✅ Button */}
+          <button
+            style={styles.button}
+            type="submit"
+            disabled={loading}
+          >
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
-        <p style={styles.link} onClick={() => navigate("/register")}>
+        {/* ✅ Register Redirect */}
+        <p
+          style={styles.link}
+          onClick={() => navigate("/register")}
+        >
           Don't have an account? Register →
         </p>
       </div>
@@ -100,50 +130,69 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "#9B0F06",
+    background: "#6D1B1B",
     fontFamily: "Arial, sans-serif",
   },
+
   card: {
-    background: "#EED9B9",
-    padding: "35px",
-    borderRadius: "14px",
-    width: "320px",
+    background: "#F4EFE6",
+    padding: "38px",
+    borderRadius: "16px",
+    width: "340px",
     maxWidth: "90%",
-    boxShadow: "0 8px 25px rgba(0,0,0,0.3)",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
     textAlign: "center",
-    border: "3px solid #5E0006",
+    border: "2px solid #3E2723",
   },
+
+  logo: {
+    color: "#6D1B1B",
+    cursor: "pointer",
+    marginBottom: "5px",
+    fontSize: "32px",
+    fontWeight: "bold",
+    letterSpacing: "1px",
+  },
+
   title: {
-    marginBottom: "20px",
-    color: "#5E0006",
+    marginBottom: "25px",
+    color: "#3E2723",
+    fontWeight: "500",
   },
+
   form: {
     display: "flex",
     flexDirection: "column",
   },
+
   inputGroup: {
     position: "relative",
-    marginBottom: "18px",
+    marginBottom: "20px",
   },
+
   input: {
     width: "100%",
     boxSizing: "border-box",
-    padding: "12px 70px 12px 12px",
-    borderRadius: "8px",
-    border: "1px solid #9B0F06",
-    background: "#fff3e0",
-    color: "#333",
+    padding: "14px 70px 14px 14px",
+    borderRadius: "10px",
+    border: "1px solid #C8B6A6",
+    background: "#FAF7F2",
+    color: "#2B2B2B",
     outline: "none",
+    fontSize: "14px",
   },
+
   label: {
     position: "absolute",
     top: "-10px",
     left: "10px",
     fontSize: "12px",
-    color: "#D53E0F",
-    background: "#EED9B9",
-    padding: "0 5px",
+    color: "#A63D40",
+    background: "#F4EFE6",
+    padding: "0 6px",
+    fontWeight: "bold",
   },
+
   toggle: {
     position: "absolute",
     right: "12px",
@@ -151,24 +200,29 @@ const styles = {
     transform: "translateY(-50%)",
     cursor: "pointer",
     fontSize: "12px",
-    color: "#D53E0F",
+    color: "#A63D40",
     fontWeight: "bold",
   },
+
   button: {
-    padding: "12px",
-    borderRadius: "8px",
+    padding: "13px",
+    borderRadius: "10px",
     border: "none",
-    background: "#D53E0F",
+    background: "#A63D40",
     color: "white",
     fontWeight: "bold",
     cursor: "pointer",
-    marginTop: "5px",
+    marginTop: "8px",
+    fontSize: "15px",
+    transition: "0.2s ease",
   },
+
   link: {
-    marginTop: "15px",
-    color: "#5E0006",
+    marginTop: "18px",
+    color: "#6D1B1B",
     cursor: "pointer",
     fontSize: "14px",
+    fontWeight: "500",
   },
 };
 

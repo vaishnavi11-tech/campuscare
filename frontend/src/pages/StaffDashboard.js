@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import API from "../services/api"; // ✅ changed
+import API from "../services/api";
 import Navbar from "../components/Navbar";
 import "../App.css";
 
@@ -7,20 +7,24 @@ const StaffDashboard = () => {
   const [issues, setIssues] = useState([]);
   const [filter, setFilter] = useState("All");
 
+  // ✅ Fetch Assigned Issues
   const fetchIssues = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await API.get("/api/issues", { // ✅ changed
+      const res = await API.get("/api/issues", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      const user = JSON.parse(localStorage.getItem("user"));
+      const user = JSON.parse(
+        localStorage.getItem("user")
+      );
 
       const assignedIssues = res.data.filter(
-        (issue) => issue.assignedTo?._id === user.id
+        (issue) =>
+          issue.assignedTo?._id === user.id
       );
 
       setIssues(assignedIssues);
@@ -33,12 +37,16 @@ const StaffDashboard = () => {
     fetchIssues();
   }, []);
 
+  // ✅ Update Status
   const updateStatus = async (id, status) => {
     try {
       const token = localStorage.getItem("token");
-      const user = JSON.parse(localStorage.getItem("user"));
 
-      await API.put( // ✅ changed
+      const user = JSON.parse(
+        localStorage.getItem("user")
+      );
+
+      await API.put(
         `/api/issues/${id}/status`,
         {
           status,
@@ -57,48 +65,161 @@ const StaffDashboard = () => {
     }
   };
 
+  // ✅ Filters
   const filteredIssues =
     filter === "All"
       ? issues
-      : issues.filter((issue) => issue.status === filter);
+      : issues.filter(
+          (issue) =>
+            issue.status === filter
+        );
 
   return (
     <>
       <Navbar />
 
       <div className="container">
-        <h1>🛠️ Staff Dashboard</h1>
 
-        <div style={{ marginBottom: "15px" }}>
-          <p>Total: {issues.length}</p>
-          <p>Pending: {issues.filter(i => i.status === "Pending").length}</p>
-          <p>In Progress: {issues.filter(i => i.status === "In Progress").length}</p>
-          <p>Resolved: {issues.filter(i => i.status === "Resolved").length}</p>
+        {/* ✅ Heading */}
+        <h1
+          style={{
+            color: "#F4EFE6",
+            marginBottom: "5px",
+          }}
+        >
+          Staff Dashboard
+        </h1>
+
+        <p
+          style={{
+            color: "#E8DCCF",
+            marginBottom: "25px",
+          }}
+        >
+          Manage assigned campus issues
+        </p>
+
+        {/* ✅ Statistics */}
+        <div
+          style={{
+            display: "flex",
+            gap: "15px",
+            flexWrap: "wrap",
+            marginBottom: "25px",
+          }}
+        >
+
+          <div className="card">
+            <h3>Total</h3>
+            <p>{issues.length}</p>
+          </div>
+
+          <div className="card">
+            <h3>Pending</h3>
+
+            <p>
+              {
+                issues.filter(
+                  (i) =>
+                    i.status === "Pending"
+                ).length
+              }
+            </p>
+          </div>
+
+          <div className="card">
+            <h3>In Progress</h3>
+
+            <p>
+              {
+                issues.filter(
+                  (i) =>
+                    i.status ===
+                    "In Progress"
+                ).length
+              }
+            </p>
+          </div>
+
+          <div className="card">
+            <h3>Resolved</h3>
+
+            <p>
+              {
+                issues.filter(
+                  (i) =>
+                    i.status ===
+                    "Resolved"
+                ).length
+              }
+            </p>
+          </div>
         </div>
 
-        <div style={{ marginBottom: "15px" }}>
-          <button onClick={() => setFilter("All")}>All</button>
-          <button onClick={() => setFilter("Pending")} style={{ marginLeft: "5px" }}>
+        {/* ✅ Filters */}
+        <div
+          style={{
+            marginBottom: "20px",
+            display: "flex",
+            gap: "10px",
+            flexWrap: "wrap",
+          }}
+        >
+          <button
+            onClick={() => setFilter("All")}
+          >
+            All
+          </button>
+
+          <button
+            onClick={() =>
+              setFilter("Pending")
+            }
+          >
             Pending
           </button>
-          <button onClick={() => setFilter("In Progress")} style={{ marginLeft: "5px" }}>
+
+          <button
+            onClick={() =>
+              setFilter("In Progress")
+            }
+          >
             In Progress
           </button>
-          <button onClick={() => setFilter("Resolved")} style={{ marginLeft: "5px" }}>
+
+          <button
+            onClick={() =>
+              setFilter("Resolved")
+            }
+          >
             Resolved
           </button>
         </div>
 
+        {/* ✅ Issue Cards */}
         {filteredIssues.length === 0 ? (
-          <p style={{ color: "gray" }}>No assigned issues 🚀</p>
+          <div className="card">
+            <h3>No Assigned Issues</h3>
+
+            <p>
+              Assigned issues will appear
+              here.
+            </p>
+          </div>
         ) : (
           filteredIssues.map((issue) => (
-            <div className="card" key={issue._id}>
+            <div
+              className="card"
+              key={issue._id}
+            >
               <h3>{issue.title}</h3>
+
               <p>{issue.description}</p>
 
+              {/* ✅ Status */}
               <p>
-                Status:{" "}
+                <strong>Status:</strong>{" "}
+
                 <span
                   style={{
                     padding: "5px 10px",
@@ -106,9 +227,11 @@ const StaffDashboard = () => {
                     color: "#fff",
                     fontSize: "13px",
                     backgroundColor:
-                      issue.status === "Pending"
+                      issue.status ===
+                      "Pending"
                         ? "#f39c12"
-                        : issue.status === "In Progress"
+                        : issue.status ===
+                          "In Progress"
                         ? "#3498db"
                         : "#2ecc71",
                   }}
@@ -117,37 +240,67 @@ const StaffDashboard = () => {
                 </span>
               </p>
 
+              {/* ✅ Priority */}
               <p>
                 <strong>Priority:</strong>{" "}
+
                 <span
                   style={{
                     color:
-                      issue.priority === "High"
+                      issue.priority ===
+                      "High"
                         ? "red"
-                        : issue.priority === "Medium"
+                        : issue.priority ===
+                          "Medium"
                         ? "orange"
                         : "green",
+                    fontWeight: "bold",
                   }}
                 >
                   {issue.priority}
                 </span>
               </p>
 
-              <p><strong>Category:</strong> {issue.category}</p>
+              {/* ✅ Category */}
+              <p>
+                <strong>Category:</strong>{" "}
+                {issue.category}
+              </p>
+
+              {/* ✅ Created Date */}
+              <p>
+                <strong>Created:</strong>{" "}
+                {new Date(
+                  issue.createdAt
+                ).toLocaleDateString()}
+              </p>
 
               <br />
 
+              {/* ✅ Actions */}
               <button
-                className="btn btn-yellow"
-                onClick={() => updateStatus(issue._id, "In Progress")}
+                className="btn-yellow"
+                onClick={() =>
+                  updateStatus(
+                    issue._id,
+                    "In Progress"
+                  )
+                }
               >
                 Start Work
               </button>
 
               <button
-                className="btn btn-green"
-                style={{ marginLeft: "10px" }}
-                onClick={() => updateStatus(issue._id, "Resolved")}
+                className="btn-green"
+                style={{
+                  marginLeft: "10px",
+                }}
+                onClick={() =>
+                  updateStatus(
+                    issue._id,
+                    "Resolved"
+                  )
+                }
               >
                 Mark Resolved
               </button>

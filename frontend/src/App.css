@@ -1,77 +1,99 @@
-/* 🌍 DASHBOARD BACKGROUND */
+/* 🌍 GLOBAL */
 body {
-  background-color: #9B0F06; /* 🔴 main */
-  color: #EED9B9;
+  margin: 0;
+  padding: 0;
+  background-color: #6D1B1B;
+  font-family: Arial, sans-serif;
+  color: #2B2B2B;
 }
 
 /* 📦 CONTAINER */
 .container {
-  padding: 20px;
-}
-
-/* 🔝 NAVBAR */
-.navbar {
-  background-color: #5E0006;
-  color: #EED9B9;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
+  padding: 30px;
 }
 
 /* 🧾 CARDS */
 .card {
-  background-color: #EED9B9;
-  color: #5E0006;
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 15px;
-  border: 2px solid #5E0006;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  background-color: #F4EFE6;
+  color: #3E2723;
+  padding: 22px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+  border: none;
 }
 
 /* ✏️ INPUTS */
-.input, .select {
+.input,
+.select {
   width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  border-radius: 6px;
-  border: 1px solid #9B0F06;
-  background: #fff3e0;
-  color: #333;
+  padding: 14px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #D7CCC8;
+  background: #FAF7F2;
+  color: #2B2B2B;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
-/* 🔘 BUTTON BASE */
+/* 🔘 BUTTONS */
 button {
-  padding: 8px 14px;
-  border-radius: 6px;
+  padding: 10px 18px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s ease;
 }
 
-/* 🎯 BUTTONS */
+/* 🎯 BUTTON COLORS */
 .btn-blue {
-  background: #D53E0F; /* 🟠 */
+  background: #A63D40;
   color: white;
 }
 
 .btn-green {
-  background: #5E0006; /* ❤️ */
+  background: #2E7D32;
   color: white;
 }
 
 .btn-yellow {
-  background: #9B0F06; /* 🔴 */
+  background: #EF6C00;
   color: white;
 }
 
 /* 🔴 LOGOUT */
 .logout-btn {
-  background: #D53E0F;
+  background: #A63D40;
   color: white;
 }
 
 /* 🎯 HEADINGS */
-h1, h2 {
-  color: #EED9B9;
+h1 {
+  color: #F4EFE6;
+  margin-bottom: 10px;
+}
+
+h2 {
+  color: #F4EFE6;
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 768px) {
+  .container {
+    padding: 18px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+}
+button:hover {
+  opacity: 0.9;
+}
+
+button:not(.logout-btn) {
+  background: #A63D40;
+  color: white;
 }
