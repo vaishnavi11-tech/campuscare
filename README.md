@@ -9,11 +9,11 @@ A full-stack MERN application that allows students, staff, and administrators to
  Features
 
 - Role-based authentication** – Separate dashboards for students, staff, and administrators
-- Issue reporting** – Students can submit issues with category and priority
-- Status tracking** – Real-time workflow updates on complaint progress
-- Category-wise filtering** – Filter issues by type for efficient handling
-- Smart assignment** – Category-based staff assignment for issue resolution
-- JWT-based secure auth** – Protected routes with JSON Web Tokens
+- Issue reporting – Students can submit issues with category and priority
+- Status tracking – Real-time workflow updates on complaint progress
+- Category-wise filtering – Filter issues by type for efficient handling
+- Smart assignment – Category-based staff assignment for issue resolution
+- JWT-based secure auth – Protected routes with JSON Web Tokens
 
 ---
 
@@ -129,6 +129,6 @@ Frontend runs on `http://localhost:3000`
 
 ## Author
 
-**Vaishnavi Banbare**  
+Vaishnavi Banbare 
 GitHub: [@vaishnavi11-tech](https://github.com/vaishnavi11-tech)  
 LinkedIn: [vaishnavi-banbare](https://linkedin.com/in/vaishnavi-banbare-7200a2385)
