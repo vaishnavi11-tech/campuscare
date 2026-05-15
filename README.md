@@ -8,7 +8,7 @@ A full-stack MERN application that allows students, staff, and administrators to
 
  Features
 
-- Role-based authentication** – Separate dashboards for students, staff, and administrators
+- Role-based authentication – Separate dashboards for students, staff, and administrators
 - Issue reporting – Students can submit issues with category and priority
 - Status tracking – Real-time workflow updates on complaint progress
 - Category-wise filtering – Filter issues by type for efficient handling
